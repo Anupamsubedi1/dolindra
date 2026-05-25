@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #fafaf8;
+  --color-surface: #ffffff;
+  --color-dark: #1a1a1a;
+  --color-primary: #c0392b;
+  --color-primary-light: #e74c3c;
+  --color-gold: #d4a843;
+  --color-muted: #6b7280;
+  --color-border: #e5e7eb;
+
+  /* Canonical motion tokens — mirror src/utils/animations.ts */
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 200ms;
+  --duration-base: 300ms;
+  --duration-slow: 500ms;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--color-bg);
+  color: var(--color-dark);
+  font-family: var(--font-body), sans-serif;
+}
+
+::selection {
+  background: #c0392b22;
+  color: var(--color-dark);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-light);
+}
+
+a,
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  transition: outline-offset var(--duration-fast) var(--ease-smooth);
+}
+
+.font-display {
+  font-family: var(--font-display), serif;
+}
+
+.font-body {
+  font-family: var(--font-body), sans-serif;
+}
+
+/* Apply the smooth easing curve to any element using Tailwind's
+   `transition`/`transition-*` utilities, so framer-motion entrances
+   and CSS hover effects share one motion vocabulary. */
+.transition,
+[class*="transition-"] {
+  transition-timing-function: var(--ease-smooth);
+}
+
+/* Respect users who prefer reduced motion: drop framer-motion and CSS
+   transitions to near-zero, and stop infinite loops like animate-ping. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
