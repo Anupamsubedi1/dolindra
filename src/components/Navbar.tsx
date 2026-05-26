@@ -174,20 +174,15 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
               className="fixed inset-0 z-40 bg-black/45 backdrop-blur-sm lg:hidden"
             />
 
-            {/* Glassmorphism drawer */}
+            {/* Solid drawer */}
             <motion.aside
               key="nav-drawer"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ duration: 0.45, ease: smoothEase }}
-              className="fixed right-0 top-0 z-50 flex h-full w-[82vw] max-w-xs flex-col gap-2 border-l border-white/15 bg-white/5 px-5 pb-8 pt-24 shadow-[0_20px_60px_rgba(0,0,0,0.45)] backdrop-blur-2xl backdrop-saturate-150 lg:hidden"
+              className="fixed right-0 top-0 z-50 flex h-full w-[82vw] max-w-xs flex-col gap-2 border-l border-white/15 bg-[#0F172B] px-5 pb-8 pt-24 shadow-[0_20px_60px_rgba(0,0,0,0.6)] lg:hidden"
             >
-              <span
-                aria-hidden
-                className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-dark/30 via-dark/40 to-dark/60"
-              />
-
               {navLinks.map((link) => {
                 const isActive =
                   activeSection.toLowerCase() === link.href.replace('#', '').toLowerCase()
@@ -198,8 +193,8 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
                     className={clsx(
                       'rounded-2xl border px-4 py-3 text-left text-base font-medium transition-all duration-300',
                       isActive
-                        ? 'border-white/30 bg-white/20 text-white shadow-inner'
-                        : 'border-white/10 bg-white/[0.06] text-white/85 hover:border-white/20 hover:bg-white/[0.12] hover:text-white'
+                        ? 'border-white/30 bg-white/15 text-white shadow-inner'
+                        : 'border-white/10 bg-white/[0.04] text-white/90 hover:border-white/25 hover:bg-white/10 hover:text-white'
                     )}
                   >
                     {link.label}
