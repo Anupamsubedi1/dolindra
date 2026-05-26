@@ -103,7 +103,15 @@ export default function HomePage() {
       }
       const sectionId = href.replace('#', '')
       setActiveSection(sectionId)
-      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      const target = document.getElementById(sectionId)
+      if (!target) return
+
+      const lenis = typeof window !== 'undefined' ? window.__lenis : undefined
+      if (lenis) {
+        lenis.scrollTo(target, { offset: -80, duration: 1.2 })
+      } else {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
     },
     [router],
   )
