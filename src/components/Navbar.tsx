@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FiMenu, FiX } from 'react-icons/fi'
 import clsx from 'clsx'
@@ -15,21 +16,29 @@ interface NavbarProps {
 export function Navbar({ activeSection, onNavigate }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0, opacity: 0 })
   const navRef = useRef<HTMLElement | null>(null)
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([])
   const scrollFrame = useRef<number | null>(null)
 
-  // ── lock body scroll while mobile drawer is open ──────────────────
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // ── lock body scroll + pause Lenis while drawer is open ───────────
   useEffect(() => {
     if (typeof document === 'undefined') return
-    if (mobileOpen) {
-      const previous = document.body.style.overflow
-      document.body.style.overflow = 'hidden'
-      return () => {
-        document.body.style.overflow = previous
-      }
+    if (!mobileOpen) return
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    window.__lenis?.stop()
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.__lenis?.start()
     }
   }, [mobileOpen])
 
@@ -91,7 +100,7 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
       initial="hidden"
       animate="visible"
       className={clsx(
-        'fixed inset-x-0 top-0 z-50 border-b text-white transition-all duration-500',
+        'fixed inset-x-0 top-0 z-50 border-b text-white transition-colors duration-300 will-change-[background-color,border-color,box-shadow]',
         isScrolled
           ? 'border-white/15 bg-[#0F172B]/95 shadow-[0_8px_30px_rgba(15,23,43,0.45)] backdrop-blur-xl'
           : 'border-white/10 bg-[#0F172B]'
@@ -159,59 +168,75 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
         </button>
       </div>
 
-      {/* Mobile drawer */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              key="nav-backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: smoothEase }}
-              onClick={() => setMobileOpen(false)}
-              className="fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm lg:hidden"
-            />
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {mobileOpen && (
+              <div className="lg:hidden">
+                {/* Backdrop */}
+                <motion.div
+                  key="nav-backdrop"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.25, ease: smoothEase }}
+                  onClick={() => setMobileOpen(false)}
+                  className="fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm"
+                />
 
-            {/* Solid drawer */}
-            <motion.aside
-              key="nav-drawer"
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ duration: 0.45, ease: smoothEase }}
-              style={{ backgroundColor: '#0F172B' }}
-              className="fixed right-0 top-0 z-[100] isolate flex h-full w-[82vw] max-w-xs flex-col gap-2 border-l border-white/15 px-5 pb-8 pt-24 shadow-[0_20px_60px_rgba(0,0,0,0.6)] lg:hidden"
-            >
-              {navLinks.map((link) => {
-                const isActive =
-                  activeSection.toLowerCase() === link.href.replace('#', '').toLowerCase()
-                return (
-                  <button
-                    key={link.href}
-                    onClick={() => navigate(link.href)}
-                    className={clsx(
-                      'rounded-2xl border px-4 py-3 text-left text-base font-medium transition-all duration-300',
-                      isActive
-                        ? 'border-white/30 bg-white/15 text-white shadow-inner'
-                        : 'border-white/10 bg-white/[0.04] text-white/90 hover:border-white/25 hover:bg-white/10 hover:text-white'
-                    )}
-                  >
-                    {link.label}
-                  </button>
-                )
-              })}
-              <button
-                onClick={() => navigate('/contact')}
-                className="mt-3 rounded-full bg-primary px-5 py-3.5 text-sm font-semibold text-white shadow-lg transition-colors duration-300 hover:bg-primary-light"
-              >
-                Contact Me
-              </button>
-            </motion.aside>
-          </>
+                {/* Drawer */}
+                <motion.aside
+                  key="nav-drawer"
+                  initial={{ x: '100%' }}
+                  animate={{ x: 0 }}
+                  exit={{ x: '100%' }}
+                  transition={{ duration: 0.35, ease: smoothEase }}
+                  style={{ backgroundColor: '#0F172B' }}
+                  className="fixed right-0 top-0 z-[100] flex h-[100dvh] w-[82vw] max-w-xs flex-col border-l border-white/15 shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
+                >
+                  <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-white/10">
+                    <span className="font-display text-2xl font-bold text-primary">DPS</span>
+                    <button
+                      onClick={() => setMobileOpen(false)}
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white"
+                      aria-label="Close menu"
+                    >
+                      <FiX size={20} />
+                    </button>
+                  </div>
+
+                  <div className="flex flex-1 flex-col gap-2 overflow-y-auto px-5 pt-5 pb-8">
+                    {navLinks.map((link) => {
+                      const isActive =
+                        activeSection.toLowerCase() === link.href.replace('#', '').toLowerCase()
+                      return (
+                        <button
+                          key={link.href}
+                          onClick={() => navigate(link.href)}
+                          className={clsx(
+                            'rounded-2xl border px-4 py-3 text-left text-base font-medium transition-colors duration-200',
+                            isActive
+                              ? 'border-white/30 bg-white/15 text-white shadow-inner'
+                              : 'border-white/10 bg-white/[0.04] text-white/90 hover:border-white/25 hover:bg-white/10 hover:text-white'
+                          )}
+                        >
+                          {link.label}
+                        </button>
+                      )
+                    })}
+                    <button
+                      onClick={() => navigate('/contact')}
+                      className="mt-3 rounded-full bg-primary px-5 py-3.5 text-sm font-semibold text-white shadow-lg transition-colors duration-200 hover:bg-primary-light"
+                    >
+                      Contact Me
+                    </button>
+                  </div>
+                </motion.aside>
+              </div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </motion.header>
   )
 }
