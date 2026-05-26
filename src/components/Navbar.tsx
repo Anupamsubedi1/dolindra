@@ -171,7 +171,7 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease: smoothEase }}
               onClick={() => setMobileOpen(false)}
-              className="fixed inset-0 z-40 bg-black/45 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm lg:hidden"
             />
 
             {/* Solid drawer */}
@@ -181,7 +181,8 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ duration: 0.45, ease: smoothEase }}
-              className="fixed right-0 top-0 z-50 flex h-full w-[82vw] max-w-xs flex-col gap-2 border-l border-white/15 bg-[#0F172B] px-5 pb-8 pt-24 shadow-[0_20px_60px_rgba(0,0,0,0.6)] lg:hidden"
+              style={{ backgroundColor: '#0F172B' }}
+              className="fixed right-0 top-0 z-[100] isolate flex h-full w-[82vw] max-w-xs flex-col gap-2 border-l border-white/15 px-5 pb-8 pt-24 shadow-[0_20px_60px_rgba(0,0,0,0.6)] lg:hidden"
             >
               {navLinks.map((link) => {
                 const isActive =
