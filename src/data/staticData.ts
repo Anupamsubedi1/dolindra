@@ -35,7 +35,7 @@ export const contactInfo = {
 } as const
 
 export const heroSummary =
-  'I’m an organizational leader from Nepal who loves building businesses, growing teams, and turning bold ideas into real, working ventures.'
+  'With over 25 years of experience, I have led organizations across diverse fields — from publishing and academic research to community development and agricultural enterprise in Nepal. Through strategic leadership and a steady focus on people, I turn businesses into lasting institutions.'
 
 export const aboutStats: StatCard[] = [
   { value: '25+', label: 'Years of Experience' },
