@@ -135,7 +135,7 @@ export function Hero({ onNavigate, isLoaded }: HeroProps) {
             />
 
             {/* Main photo card — aspect on mobile, viewport-height on desktop */}
-            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[1.75rem] bg-gradient-to-b from-stone-100 to-stone-200 shadow-[0_24px_60px_rgba(17,24,39,0.18)] ring-1 ring-black/5 sm:rounded-[2rem] lg:aspect-auto lg:h-[calc(100vh-9rem)] lg:max-h-[820px] lg:min-h-[560px] lg:rounded-[2.25rem]">
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[1.75rem] bg-gradient-to-b from-stone-100 to-stone-200 shadow-[0_24px_60px_rgba(17,24,39,0.18)] ring-1 ring-black/5 sm:rounded-[2rem] lg:aspect-auto lg:h-[calc(100vh-16rem)] lg:max-h-[600px] lg:min-h-[420px] lg:rounded-[2.25rem]">
               {!imageError ? (
                 <Image
                   src="/hero-image.png"

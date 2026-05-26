@@ -91,8 +91,10 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
       initial="hidden"
       animate="visible"
       className={clsx(
-        'fixed inset-x-0 top-0 z-50 border-b border-white/10 text-white transition-all duration-500',
-        isScrolled ? 'bg-dark/90 shadow-lg backdrop-blur-xl' : 'bg-dark'
+        'fixed inset-x-0 top-0 z-50 border-b text-white transition-all duration-500',
+        isScrolled
+          ? 'border-white/15 bg-[#0F172B]/95 shadow-[0_8px_30px_rgba(15,23,43,0.45)] backdrop-blur-xl'
+          : 'border-white/10 bg-dark'
       )}
     >
       <div className="mx-auto flex max-w-[1600px] items-center justify-between px-4 py-4 sm:px-8 lg:px-20 xl:px-32">
@@ -113,7 +115,7 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
         >
           {/* Sliding underline */}
           <motion.span
-            className="pointer-events-none absolute -bottom-1 h-0.5 rounded-full bg-primary"
+            className="pointer-events-none absolute -bottom-1 h-[3px] rounded-full bg-primary-light shadow-[0_0_12px_rgba(231,76,60,0.6)]"
             animate={{
               left: underlineStyle.left,
               width: underlineStyle.width,
@@ -132,7 +134,7 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
                 'relative text-sm font-medium transition-colors duration-300',
                 activeSection.toLowerCase() === link.href.replace('#', '').toLowerCase()
                   ? 'text-white'
-                  : 'text-white/70 hover:text-white'
+                  : 'text-white/85 hover:text-white'
               )}
             >
               {link.label}
